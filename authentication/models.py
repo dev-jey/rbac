@@ -5,9 +5,10 @@ from datetime import datetime, timedelta
 
 from django.conf import settings
 from django.contrib.auth.models import (
-    AbstractBaseUser, BaseUserManager, PermissionsMixin
+    AbstractBaseUser, BaseUserManager, PermissionsMixin, Group
 )
 from django.db import models
+
 
 class UserManager(BaseUserManager):
 
@@ -48,13 +49,14 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_subcribed = models.BooleanField(default=False)
+    groups = models.ForeignKey(Group, on_delete=models.CASCADE, default=3)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     updated_at = models.DateTimeField(auto_now=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = ['username', 'groups_id']
 
     objects = UserManager()
 

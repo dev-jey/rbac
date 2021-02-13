@@ -15,13 +15,27 @@ Including another URLconf
 """
 from django.urls import include, path
 from django.contrib import admin
-from rest_framework_swagger.views import get_swagger_view
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from rest_framework.permissions import AllowAny
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Snippets API",
+      default_version='v1',
+      description="Test description",
+      terms_of_service="https://www.google.com/policies/terms/",
+      contact=openapi.Contact(email="contact@snippets.local"),
+      license=openapi.License(name="BSD License"),
+   ),
+   public=True,
+   permission_classes=(AllowAny,),
+)
 
-schema_view = get_swagger_view(title='Authors Haven - A Social platform for the creative at heart.')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(('authentication.urls', 'authentication'), namespace='authentication')),
-     path('api/', include(('todo.urls', 'todo'), namespace='authentication')),
-    path(r'', schema_view),
+    path('api/', include(('todo.urls', 'todo'), namespace='authentication')),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]

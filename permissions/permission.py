@@ -17,13 +17,23 @@ def _has_group_permission(user, required_groups):
 
 class IsLoggedInUserOrAdmin(permissions.BasePermission):
     # group_name for super admin
-    required_groups = ['admin']
+    required_groups = ['admin', "normal"]
 
-    def has_object_permission(self, request, view, obj):
+    def has_permission(self, request, view):
+        import pdb; pdb.set_trace()
         has_group_permission = _has_group_permission(request.user, self.required_groups)
         if self.required_groups is None:
             return False
-        return obj == request.user or has_group_permission
+        return  has_group_permission
+    def has_object_permission(self, request, view, obj):
+        import pdb; pdb.set_trace()
+        has_group_permission = _has_group_permission(request.user, "Admin")
+        if self.required_groups is None:
+            return False
+        return  obj.created_by == request.user or has_group_permission
+        
+
+    
 
 
 class IsAdminUser(permissions.BasePermission):
