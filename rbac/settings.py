@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import os
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "rest_framework"
+    "rest_framework",
+    "rest_framework_swagger",
+    "authentication"
 ]
 
 MIDDLEWARE = [
@@ -81,15 +85,7 @@ DATABASES = {
     }
 }
 
-
-CORS_ORIGIN_WHITELIST = os.getenv('CORS_WHITELIST', '*').split(',') + [
-    '*',
-    '0.0.0.0:4000',
-    'localhost:4000',
-    'localhost:3000',
-    'localhost:8000',
-]
-
+AUTH_USER_MODEL = 'authentication.User'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.authentication.backends.ModelBackend',
@@ -110,7 +106,7 @@ DATABASES = {
 REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'authors.apps.authentication.backends.JWTAuthentication',
+        'authentication.backends.JWTAuthentication',
          'rest_framework.authentication.SessionAuthentication',
          'rest_framework.authentication.BasicAuthentication',
     ),
