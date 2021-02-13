@@ -45,7 +45,7 @@ class User(AbstractBaseUser):
     username = models.CharField(db_index=True, max_length=255, unique=True)
 
     email = models.EmailField(db_index=True, unique=True)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_subcribed = models.BooleanField(default=False)
 
@@ -82,4 +82,4 @@ class User(AbstractBaseUser):
 
         token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
 
-        return token.decode()
+        return token

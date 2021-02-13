@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
     "rest_framework",
     "rest_framework_swagger",
     "authentication"
@@ -88,7 +87,7 @@ DATABASES = {
 AUTH_USER_MODEL = 'authentication.User'
 
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.authentication.backends.ModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 DATABASES = {
@@ -149,4 +148,4 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
+# STATIC_URL = '/static/'

@@ -3,11 +3,11 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView
-from rest_framework.viewsets import ViewSet, ModelViewSet
 from rest_framework.permissions import AllowAny
-from .permission import IsAdminUser, IsLoggedInUserOrAdmin, IsAdminOrAnonymousUser
+from permissions.permission import IsAdminUser, IsLoggedInUserOrAdmin, IsAdminOrAnonymousUser
 from .models import User
-from .serializers import UserSerializer
+from .serializers import UserSerializer, RegistrationSerializer,LoginSerializer
+from .renderers import UserJSONRenderer
 
 
 class RegistrationAPIView(CreateAPIView):
@@ -21,15 +21,19 @@ class RegistrationAPIView(CreateAPIView):
         serializer = self.serializer_class(data=user)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(return_message, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+class LoginAPIView(CreateAPIView):
+    permission_classes = (AllowAny,)
+    renderer_classes = (UserJSONRenderer,)
+    serializer_class = LoginSerializer
 
-class LoginView(ViewSet):
-    sserializer_class = LoginSerializer
+    def post(self, request):
+        user = request.data.get('user', {})
+        serializer = self.serializer_class(data=user)
+        serializer.is_valid(raise_exception=True)
 
-    def create(request):
-        return ObtainAuthToken().post(request)
-
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class LogoutView(APIView):
     def get(self, request, format=None):
